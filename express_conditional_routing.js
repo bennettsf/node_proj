@@ -18,10 +18,6 @@ app.set('port', process.env.PORT || 3000);
         res.send("and sometimes that...")
     });
 
-
-
-
-
 app.listen(app.get('port'), () => {
     console.log("Express Started")
 })
