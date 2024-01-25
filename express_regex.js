@@ -3,19 +3,9 @@ import express from 'express'
 const app = express()
 app.set('port', process.env.PORT || 3000);
 
-app.get('/foo', (req, res, next) => {
-
-    if (Math.round(Math.random())){
-        next()
-    }
-
+app.get('/user(name)?', (req, res) => {
     res.type('text/plain');
-     res.send("sometimes this...")
-});
-
-app.get('/foo', (req, res) => {
-    res.type('text/plain');
-    res.send("and sometimes that...")
+    res.send("This route works for both /user and /username!")
 });
 
 app.use((req, res) => {
