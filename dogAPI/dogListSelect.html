@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Breeds</title>
+</head>
+<body>
+    <h2>Select a Dog!</h2>
+    <form>
+        <select title="dogSelectList" id="selectDog" size="10">
+          
+        </select>
+    </form>
+    
+    <div id='dogInfo'>
+
+        <h1 id="breedName"></h1>
+        <h2 id="breedInfo"></h2>
+        <p id="breedDesc"></p>
+
+    </div>
+    
+</body>
+<script>
+    const selectElement = document.getElementById('selectDog')
+    const displayInfoElement = document.getElementById('dogInfo')
+    const breedNameElement = document.getElementById('breedName')
+    const breedInfoElement = document.getElementById('breedInfo')
+    const breenDescElement = document.getElementById('breedDesc')
+    let dogDataArray = []
+
+    async function fetchDogInfo() {
+        try {
+
+            const response = await fetch('https://dogapi.dog/api/v2/breeds')
+            if (!response.ok) {
+                throw new Error('Network response was not okay: ' + response.status)
+            }
+            const dogDataResponse = await response.json()
+            dogDataArray = dogDataResponse.data
+            
+            dogDataArray.forEach(dog => {
+                const dogOption = document.createElement("option")
+                dogOption.text = dog.attributes.name
+                selectElement.appendChild(dogOption)
+            });
+
+
+        } catch (error) {
+            console.error('Error fetching dog breeds:', error)
+            res.status(500).send('Internal Server Error')
+        }
+        
+    }
+
+    async function displayDogInfo() {
+        const selectedDogName = selectElement.options[selectElement.selectedIndex].text;
+        
+        const selectedDog = dogDataArray.find(dog => dog.attributes.name === selectedDogName);
+        
+            if (selectedDog){
+                breedNameElement.innerHTML = `${selectedDog.attributes.name}`
+                breedInfoElement.innerHTML = `Male Weight: ${selectedDog.attributes.male_weight.min} | Female Weight: ${selectedDog.attributes.female_weight.min} | 
+                Life Expectancy: ${selectedDog. attributes.life.min} years | 
+                Hypoallergenic: ${selectedDog.attributes.hypoallergenic}`
+                breenDescElement.innerHTML = `${selectedDog.attributes.description}`
+            } else {
+                breedNameElement.innerHTML = `No Dog Info Found For ${selectedDogName}`
+                breedInfoElement.innerHTML = ''
+                breenDescElement.innerHTML = ''
+            }
+
+            console.log(selectedDog)
+                           
+    }
+    
+    fetchDogInfo().then(() => {
+            selectElement.addEventListener('change', displayDogInfo);
+        });
+
+</script>
+</html>

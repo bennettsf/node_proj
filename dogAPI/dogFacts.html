@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Breeds</title>
+</head>
+<body>
+    <button type="button" onclick="fetchDogFact()">Click for Random Dog Fact!</button>
+    
+    <div id="dogFact"></div>
+    
+</body>
+<script>
+    const dogFactElement = document.getElementById('dogFact')
+    let dogDataArray = []
+
+    async function fetchDogFact() {
+        try {
+            const response = await fetch('https://dogapi.dog/api/v2/facts')
+            if (!response.ok) {
+                throw new Error('Network response was not okay: ' + response.status)
+            }
+            const dogFactResponse = await response.json()
+            dogFactElement.innerHTML = dogFactResponse.data[0].attributes.body
+
+        } catch (error) {
+            console.error('Error fetching dog breeds:', error)
+            res.status(500).send('Internal Server Error')
+        }
+        
+    }
+
+</script>
+</html>

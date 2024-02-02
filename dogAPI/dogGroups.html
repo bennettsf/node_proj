@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Breeds</title>
+</head>
+<body>
+    
+    <div id="groups">
+        
+    </div>
+    
+</body>
+<script>
+    const groupsElement = document.getElementById('groups')
+
+    async function fetchDogGroups() {
+        try {
+            const groupsResponse = await fetch('https://dogapi.dog/api/v2/groups')
+            if (!groupsResponse.ok) {
+                throw new Error('Network response was not okay: ' + response.status)
+            }
+            const dogDataResponse = await groupsResponse.json()
+
+            
+            dogDataResponse.data.forEach(dogGroup => {
+                const dogGroupName = document.createElement("h2")
+                dogGroupName.innerHTML = dogGroup.attributes.name
+                groupsElement.appendChild(dogGroupName)
+                const breedGroupUL = document.createElement('ul')
+                breedGroupUL.innerHTML = 'Breed IDs:' 
+                groupsElement.appendChild(breedGroupUL)
+
+                dogGroup.relationships.breeds.data.forEach(breed => {                   
+                    const breedGroupLI = document.createElement('li')
+                    breedGroupLI.innerHTML = breed.id
+                    breedGroupUL.append(breedGroupLI)
+                });
+                
+            });
+
+        } catch (error) {
+            console.error('Error fetching dog breeds:', error)
+            res.status(500).send('Internal Server Error')
+        }
+        
+    }
+
+    fetchDogGroups()
+
+</script>
+</html>
